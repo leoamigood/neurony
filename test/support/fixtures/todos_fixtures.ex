@@ -14,7 +14,8 @@ defmodule Neurony.TodosFixtures do
         deadline: ~D[2023-09-13],
         description: "some description",
         priority: :low,
-        title: "some title"
+        title: "some title",
+        completed: false
       })
       |> Neurony.Todos.create_item()
 

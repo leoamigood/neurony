@@ -14,6 +14,8 @@ defmodule Neurony.Application do
       Neurony.Repo,
       # Start the PubSub system
       {Phoenix.PubSub, name: Neurony.PubSub},
+      {NeuronyWeb.UsersTracker,
+        [name: NeuronyWeb.UsersTracker, pubsub_server: Neurony.PubSub]},
       # Start Finch
       {Finch, name: Neurony.Finch},
       # Start the Endpoint (http/https)

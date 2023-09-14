@@ -1,4 +1,6 @@
 defmodule Neurony.Todos.Item do
+  @moduledoc false
+
   use Ecto.Schema
   import Ecto.Changeset
 

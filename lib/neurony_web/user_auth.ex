@@ -1,4 +1,6 @@
 defmodule NeuronyWeb.UserAuth do
+  @moduledoc false
+
   use NeuronyWeb, :verified_routes
 
   import Plug.Conn

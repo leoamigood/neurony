@@ -21,8 +21,8 @@ defmodule Neurony.DataCase do
 
   using do
     quote do
-      alias Neurony.Repo
       alias Ecto.Adapters.SQL.Sandbox
+      alias Neurony.Repo
 
       import Ecto
       import Ecto.Changeset

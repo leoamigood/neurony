@@ -1,9 +1,10 @@
 defmodule NeuronyWeb.UserAuthTest do
   use NeuronyWeb.ConnCase, async: true
 
-  alias Phoenix.LiveView
   alias Neurony.Accounts
   alias NeuronyWeb.UserAuth
+  alias Phoenix.LiveView
+
   import Neurony.AccountsFixtures
 
   @remember_me_cookie "_neurony_web_user_remember_me"

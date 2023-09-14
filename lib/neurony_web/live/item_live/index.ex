@@ -4,8 +4,13 @@ defmodule NeuronyWeb.ItemLive.Index do
   alias Neurony.Todos
   alias Neurony.Todos.Item
 
+  import NeuronyWeb.Endpoint
+
+  @topic "todo"
+
   @impl true
   def mount(_params, _session, socket) do
+    NeuronyWeb.Endpoint.subscribe(@topic)
     {:ok, stream(socket, :items, Todos.list_items())}
   end
 
@@ -15,9 +20,12 @@ defmodule NeuronyWeb.ItemLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
+    item = Todos.get_item!(id)
+    broadcast_from!(self(), @topic, "saved", %{item: item})
+
     socket
     |> assign(:page_title, "Edit Item")
-    |> assign(:item, Todos.get_item!(id))
+    |> assign(:item, item)
   end
 
   defp apply_action(socket, :new, _params) do
@@ -34,13 +42,37 @@ defmodule NeuronyWeb.ItemLive.Index do
 
   @impl true
   def handle_info({NeuronyWeb.ItemLive.FormComponent, {:saved, item}}, socket) do
+    broadcast_from!(self(), @topic, "saved", %{item: item})
+
     {:noreply, stream_insert(socket, :items, item)}
+  end
+
+  @impl true
+  def handle_info(%{event: "saved", payload: %{item: item}}, socket) do
+    {:noreply, stream_insert(socket, :items, item)}
+  end
+
+  @impl true
+  def handle_info(%{event: "deleted", payload: %{item: item}}, socket) do
+    {:noreply, stream_delete(socket, :items, item)}
+  end
+
+  @impl true
+  def handle_event("toggle", params, socket) do
+    item = Todos.get_item!(params["toggle-id"])
+    {:ok, item} = Todos.update_item(item, %{completed: params["value"] == "on"})
+
+    broadcast_from!(self(), @topic, "saved", %{item: item})
+
+    {:noreply, socket}
   end
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     item = Todos.get_item!(id)
     {:ok, _} = Todos.delete_item(item)
+
+    broadcast_from!(self(), @topic, "deleted", %{item: item})
 
     {:noreply, stream_delete(socket, :items, item)}
   end

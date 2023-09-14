@@ -29,7 +29,6 @@ defmodule NeuronyWeb.ItemLive.FormComponent do
           options={Ecto.Enum.values(Neurony.Todos.Item, :priority)}
         />
         <.input field={@form[:deadline]} type="date" label="Deadline" />
-        <.input field={@form[:completed]} type="checkbox" label="Completed" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Item</.button>
         </:actions>

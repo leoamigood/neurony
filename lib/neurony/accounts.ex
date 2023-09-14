@@ -6,7 +6,7 @@ defmodule Neurony.Accounts do
   import Ecto.Query, warn: false
   alias Neurony.Repo
 
-  alias Neurony.Accounts.{User, UserToken, UserNotifier}
+  alias Neurony.Accounts.{User, UserNotifier, UserToken}
 
   ## Database getters
 

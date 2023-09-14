@@ -23,6 +23,17 @@ defmodule NeuronyWeb.Router do
     get "/", PageController, :home
   end
 
+  scope "/", NeuronyWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live "/items", ItemLive.Index, :index
+    live "/items/new", ItemLive.Index, :new
+    live "/items/:id/edit", ItemLive.Index, :edit
+
+    live "/items/:id", ItemLive.Show, :show
+    live "/items/:id/show/edit", ItemLive.Show, :edit
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", NeuronyWeb do
   #   pipe_through :api

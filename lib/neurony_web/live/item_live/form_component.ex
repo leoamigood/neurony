@@ -1,6 +1,7 @@
 defmodule NeuronyWeb.ItemLive.FormComponent do
   use NeuronyWeb, :live_component
 
+  alias Neurony.Accounts
   alias Neurony.Todos
 
   @impl true
@@ -29,6 +30,7 @@ defmodule NeuronyWeb.ItemLive.FormComponent do
           options={Ecto.Enum.values(Neurony.Todos.Item, :priority)}
         />
         <.input field={@form[:deadline]} type="date" label="Deadline" />
+        <.input field={@form[:assigned_user_id]} type="select" label="Choose assignee" options={Enum.map(@assignees, fn user -> {user.email, user.id} end)} />
         <:actions>
           <.button phx-disable-with="Saving...">Save Item</.button>
         </:actions>
@@ -64,7 +66,7 @@ defmodule NeuronyWeb.ItemLive.FormComponent do
   defp save_item(socket, :edit, item_params) do
     case Todos.update_item(socket.assigns.item, item_params) do
       {:ok, item} ->
-        notify_parent({:saved, item})
+        notify_parent({:saved, Todos.reload!(item)})
 
         {:noreply,
          socket
@@ -76,8 +78,9 @@ defmodule NeuronyWeb.ItemLive.FormComponent do
     end
   end
 
-  defp save_item(socket = %{assigns: %{current_user: current_user}}, :new, item_params) do
-    case Todos.create_item(current_user, item_params) do
+  defp save_item(socket, :new, item_params) do
+    assignee = Accounts.get_user!(item_params["assigned_user_id"])
+    case Todos.create_item(assignee, item_params) do
       {:ok, item} ->
         notify_parent({:saved, item})
 

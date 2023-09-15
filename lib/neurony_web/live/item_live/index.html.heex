@@ -41,7 +41,7 @@
     title={@page_title}
     action={@live_action}
     item={@item}
-    current_user={@current_user}
+    assignees={if @live_action == :new, do: [@current_user], else: @assignees}
     patch={~p"/items"}
   />
 </.modal>

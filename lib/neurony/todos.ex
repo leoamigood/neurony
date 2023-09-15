@@ -6,7 +6,16 @@ defmodule Neurony.Todos do
   import Ecto.Query, warn: false
   alias Neurony.Repo
 
+  alias Neurony.Accounts
   alias Neurony.Todos.Item
+
+  def assignees do
+    Accounts.list_users()
+  end
+
+  def reload!(item) do
+    get_item!(item.id)
+  end
 
   @doc """
   Returns the list of items.

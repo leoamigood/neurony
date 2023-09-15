@@ -4,7 +4,7 @@ defmodule NeuronyWeb.ItemLiveTest do
   import Phoenix.LiveViewTest
   import Neurony.TodosFixtures
 
-  @create_attrs %{deadline: "2023-09-13", description: "some description", priority: :low, title: "some title"}
+  @create_attrs %{deadline: "2023-09-13", description: "some description", priority: :low, title: "some title", assigned_user_id: nil}
   @update_attrs %{deadline: "2023-09-14", description: "some updated description", priority: :medium, title: "some updated title"}
   @invalid_attrs %{deadline: nil, description: nil, priority: nil, title: nil}
 
@@ -23,7 +23,7 @@ defmodule NeuronyWeb.ItemLiveTest do
       assert html =~ item.description
     end
 
-    test "saves new item", %{conn: conn} do
+    test "saves new item", %{conn: conn, user: user} do
       {:ok, index_live, _html} = live(conn, ~p"/items")
 
       assert index_live |> element("a", "New Item") |> render_click() =~
@@ -36,7 +36,7 @@ defmodule NeuronyWeb.ItemLiveTest do
              |> render_change() =~ "can&#39;t be blank"
 
       assert index_live
-             |> form("#item-form", item: @create_attrs)
+             |> form("#item-form", item: %{@create_attrs | assigned_user_id: user.id})
              |> render_submit()
 
       assert_patch(index_live, ~p"/items")

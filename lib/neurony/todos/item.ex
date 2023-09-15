@@ -21,7 +21,7 @@ defmodule Neurony.Todos.Item do
   @doc false
   def changeset(item, attrs) do
     item
-    |> cast(attrs, [:title, :description, :priority, :deadline, :completed])
+    |> cast(attrs, [:title, :description, :priority, :deadline, :completed, :assigned_user_id])
     |> validate_required([:title, :description, :priority, :deadline])
   end
 end

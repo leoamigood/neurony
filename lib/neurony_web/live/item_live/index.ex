@@ -11,7 +11,9 @@ defmodule NeuronyWeb.ItemLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     NeuronyWeb.Endpoint.subscribe(@topic)
-    {:ok, stream(socket, :items, Todos.list_items())}
+    {:ok,
+      stream(socket, :items, Todos.list_items())
+      |> assign(:assignees, Todos.assignees())}
   end
 
   @impl true

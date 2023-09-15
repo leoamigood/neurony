@@ -8,13 +8,13 @@ defmodule NeuronyWeb.ItemLiveTest do
   @update_attrs %{deadline: "2023-09-14", description: "some updated description", priority: :medium, title: "some updated title"}
   @invalid_attrs %{deadline: nil, description: nil, priority: nil, title: nil}
 
-  defp create_item(_) do
-    item = item_fixture()
+  defp create_item(%{user: user}) do
+    item = item_fixture(user)
     %{item: item}
   end
 
   describe "Index" do
-    setup [:create_item, :register_and_log_in_user]
+    setup [:register_and_log_in_user, :create_item]
 
     test "lists all items", %{conn: conn, item: item} do
       {:ok, _index_live, html} = live(conn, ~p"/items")
@@ -78,7 +78,7 @@ defmodule NeuronyWeb.ItemLiveTest do
   end
 
   describe "Show" do
-    setup [:create_item, :register_and_log_in_user]
+    setup [:register_and_log_in_user, :create_item]
 
     test "displays item", %{conn: conn, item: item} do
       {:ok, _show_live, html} = live(conn, ~p"/items/#{item}")

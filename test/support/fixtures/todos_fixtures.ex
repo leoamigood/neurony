@@ -4,11 +4,14 @@ defmodule Neurony.TodosFixtures do
   entities via the `Neurony.Todos` context.
   """
 
+  import Neurony.AccountsFixtures
+
   @doc """
   Generate a item.
   """
-  def item_fixture(attrs \\ %{}) do
-    {:ok, item} =
+  def item_fixture(user, attrs \\ %{}) do
+    {:ok, item} = Neurony.Todos.create_item(
+      user,
       attrs
       |> Enum.into(%{
         deadline: ~D[2023-09-13],
@@ -17,7 +20,7 @@ defmodule Neurony.TodosFixtures do
         title: "some title",
         completed: false
       })
-      |> Neurony.Todos.create_item()
+    )
 
     item
   end

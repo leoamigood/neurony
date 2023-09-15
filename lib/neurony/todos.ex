@@ -18,7 +18,7 @@ defmodule Neurony.Todos do
 
   """
   def list_items do
-    query = from i in Item, order_by: [asc: i.inserted_at]
+    query = from i in Item, order_by: [asc: i.inserted_at], preload: [:assigned_user]
     Repo.all(query)
   end
 
@@ -36,7 +36,7 @@ defmodule Neurony.Todos do
       ** (Ecto.NoResultsError)
 
   """
-  def get_item!(id), do: Repo.get!(Item, id)
+  def get_item!(id), do: Repo.get!(Item, id) |> Repo.preload([:assigned_user])
 
   @doc """
   Creates a item.
@@ -50,9 +50,10 @@ defmodule Neurony.Todos do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_item(attrs \\ %{}) do
+  def create_item(user, attrs \\ %{}) do
     %Item{}
     |> Item.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:assigned_user, user)
     |> Repo.insert()
   end
 

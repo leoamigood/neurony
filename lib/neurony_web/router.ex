@@ -26,12 +26,14 @@ defmodule NeuronyWeb.Router do
   scope "/", NeuronyWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    live "/items", ItemLive.Index, :index
-    live "/items/new", ItemLive.Index, :new
-    live "/items/:id/edit", ItemLive.Index, :edit
+    live_session :require_auth, on_mount: [{NeuronyWeb.UserAuth, :mount_current_user}] do
+      live "/items", ItemLive.Index, :index
+      live "/items/new", ItemLive.Index, :new
+      live "/items/:id/edit", ItemLive.Index, :edit
 
-    live "/items/:id", ItemLive.Show, :show
-    live "/items/:id/show/edit", ItemLive.Show, :edit
+      live "/items/:id", ItemLive.Show, :show
+      live "/items/:id/show/edit", ItemLive.Show, :edit
+    end
   end
 
   # Other scopes may use custom stacks.

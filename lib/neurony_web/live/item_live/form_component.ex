@@ -76,8 +76,8 @@ defmodule NeuronyWeb.ItemLive.FormComponent do
     end
   end
 
-  defp save_item(socket, :new, item_params) do
-    case Todos.create_item(item_params) do
+  defp save_item(socket = %{assigns: %{current_user: current_user}}, :new, item_params) do
+    case Todos.create_item(current_user, item_params) do
       {:ok, item} ->
         notify_parent({:saved, item})
 

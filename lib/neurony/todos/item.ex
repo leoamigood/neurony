@@ -4,12 +4,15 @@ defmodule Neurony.Todos.Item do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Neurony.Accounts.User
+
   schema "items" do
+    belongs_to :assigned_user, User
+
     field :deadline, :date
     field :description, :string
     field :priority, Ecto.Enum, values: [:low, :medium, :high]
     field :title, :string
-    field :assigned_user_id, :id
     field :completed, :boolean
 
     timestamps()

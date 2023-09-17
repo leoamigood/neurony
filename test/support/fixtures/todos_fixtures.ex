@@ -4,8 +4,6 @@ defmodule Neurony.TodosFixtures do
   entities via the `Neurony.Todos` context.
   """
 
-  import Neurony.AccountsFixtures
-
   @doc """
   Generate a item.
   """

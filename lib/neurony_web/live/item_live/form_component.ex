@@ -10,7 +10,7 @@ defmodule NeuronyWeb.ItemLive.FormComponent do
     <div>
       <.header>
         <%= @title %>
-        <:subtitle>Use this form to manage item records in your database.</:subtitle>
+        <:subtitle>Use this form to manage tasks.</:subtitle>
       </.header>
 
       <.simple_form

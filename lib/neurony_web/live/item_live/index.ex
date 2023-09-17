@@ -6,13 +6,16 @@ defmodule NeuronyWeb.ItemLive.Index do
 
   import NeuronyWeb.Endpoint
 
-  @topic "todo"
+  @todo_topic "todo"
+
+  def todo_topic, do: @todo_topic
 
   @impl true
   def mount(_params, _session, socket) do
-    NeuronyWeb.Endpoint.subscribe(@topic)
+    if connected?(socket), do: NeuronyWeb.Endpoint.subscribe(@todo_topic)
     {:ok,
-      stream(socket, :items, Todos.list_items())
+      socket
+      |> stream(:items, Todos.list_items())
       |> assign(:assignees, Todos.assignees())}
   end
 
@@ -22,17 +25,17 @@ defmodule NeuronyWeb.ItemLive.Index do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
-    item = Todos.get_item!(id)
-    broadcast_from!(self(), @topic, "saved", %{item: item})
+    item = Todos.load_item!(id)
+    broadcast_from!(self(), @todo_topic, "saved", %{item: item})
 
     socket
-    |> assign(:page_title, "Edit Item")
+    |> assign(:page_title, "Edit Task")
     |> assign(:item, item)
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Item")
+    |> assign(:page_title, "New Task")
     |> assign(:item, %Item{})
   end
 
@@ -44,7 +47,7 @@ defmodule NeuronyWeb.ItemLive.Index do
 
   @impl true
   def handle_info({NeuronyWeb.ItemLive.FormComponent, {:saved, item}}, socket) do
-    broadcast_from!(self(), @topic, "saved", %{item: item})
+    broadcast_from!(self(), @todo_topic, "saved", %{item: item})
 
     {:noreply, stream_insert(socket, :items, item)}
   end
@@ -61,20 +64,20 @@ defmodule NeuronyWeb.ItemLive.Index do
 
   @impl true
   def handle_event("toggle", params, socket) do
-    item = Todos.get_item!(params["toggle-id"])
+    item = Todos.load_item!(params["toggle-id"])
     {:ok, item} = Todos.update_item(item, %{completed: params["value"] == "on"})
 
-    broadcast_from!(self(), @topic, "saved", %{item: item})
+    broadcast_from!(self(), @todo_topic, "saved", %{item: item})
 
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    item = Todos.get_item!(id)
+    item = Todos.load_item!(id)
     {:ok, _} = Todos.delete_item(item)
 
-    broadcast_from!(self(), @topic, "deleted", %{item: item})
+    broadcast_from!(self(), @todo_topic, "deleted", %{item: item})
 
     {:noreply, stream_delete(socket, :items, item)}
   end

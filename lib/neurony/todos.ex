@@ -14,7 +14,7 @@ defmodule Neurony.Todos do
   end
 
   def reload!(item) do
-    get_item!(item.id)
+    load_item!(item.id)
   end
 
   @doc """
@@ -38,14 +38,15 @@ defmodule Neurony.Todos do
 
   ## Examples
 
-      iex> get_item!(123)
+      iex> load_item!(123)
       %Item{}
 
-      iex> get_item!(456)
+      iex> load_item!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_item!(id), do: Repo.get!(Item, id) |> Repo.preload([:assigned_user])
+  def load_item!(id), do: Repo.get!(Item, id) |> Repo.preload([:assigned_user])
+  def get_item(id), do: Repo.get(Item, id)
 
   @doc """
   Creates a item.

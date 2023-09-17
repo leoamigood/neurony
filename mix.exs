@@ -53,6 +53,7 @@ defmodule Neurony.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:arbor, "~> 1.1.0"},
     ]
   end
 

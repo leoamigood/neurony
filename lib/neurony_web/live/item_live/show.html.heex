@@ -1,19 +1,40 @@
 <.header>
-  Item <%= @item.id %>
-  <:subtitle>This is a item record from your database.</:subtitle>
+  <%= @item.title %>
+  <:subtitle><%= @item.description %></:subtitle>
   <:actions>
     <.link patch={~p"/items/#{@item}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit item</.button>
+      <.button>Edit Task</.button>
     </.link>
   </:actions>
 </.header>
 
 <.list>
-  <:item title="Title"><%= @item.title %></:item>
   <:item title="Description"><%= @item.description %></:item>
   <:item title="Priority"><%= @item.priority %></:item>
   <:item title="Deadline"><%= @item.deadline %></:item>
 </.list>
+
+<hr/>
+<br/>
+
+<.live_component
+  module={NeuronyWeb.CommentLive.CommentsComponent}
+  id="comments-box"
+  comments={@comments}
+  item={@item}
+  user={@current_user}
+  root="comments-root"
+  offset={nil}
+/>
+
+<.live_component
+  module={NeuronyWeb.CommentLive.FormComponent}
+  id={:new}
+  reply_to={nil}
+  item={@item}
+  user={@current_user}
+  hidden={false}
+/>
 
 <.back navigate={~p"/items"}>Back to items</.back>
 

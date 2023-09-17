@@ -50,7 +50,7 @@ defmodule NeuronyWeb.ItemLiveTest do
       {:ok, index_live, _html} = live(conn, ~p"/items")
 
       assert index_live |> element("#items-#{item.id} a", "Edit") |> render_click() =~
-               "Edit Item"
+               "Edit Task"
 
       assert_patch(index_live, ~p"/items/#{item}/edit")
 
@@ -83,7 +83,7 @@ defmodule NeuronyWeb.ItemLiveTest do
     test "displays item", %{conn: conn, item: item} do
       {:ok, _show_live, html} = live(conn, ~p"/items/#{item}")
 
-      assert html =~ "Show Item"
+      assert html =~ "Show Task"
       assert html =~ item.description
     end
 
@@ -91,7 +91,7 @@ defmodule NeuronyWeb.ItemLiveTest do
       {:ok, show_live, _html} = live(conn, ~p"/items/#{item}")
 
       assert show_live |> element("a", "Edit") |> render_click() =~
-               "Edit Item"
+               "Edit Task"
 
       assert_patch(show_live, ~p"/items/#{item}/show/edit")
 

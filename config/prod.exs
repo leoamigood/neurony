@@ -11,7 +11,7 @@ config :neurony, NeuronyWeb.Endpoint, cache_static_manifest: "priv/static/cache_
 config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: Neurony.Finch
 
 # Disable Swoosh Local Memory Storage
-config :swoosh, local: false
+config :swoosh, local: true
 
 # Do not print debug messages in production
 config :logger, level: :info

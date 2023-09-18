@@ -3,11 +3,12 @@ defmodule Neurony.Todos do
   The Todos context.
   """
 
-  import Ecto.Query, warn: false
-  alias Neurony.Repo
-
   alias Neurony.Accounts
+  alias Neurony.Repo
   alias Neurony.Todos.Item
+
+  import Ecto.Changeset
+  import Ecto.Query, warn: false
 
   def assignees do
     Accounts.list_users()
@@ -45,7 +46,7 @@ defmodule Neurony.Todos do
       ** (Ecto.NoResultsError)
 
   """
-  def load_item!(id), do: Repo.get!(Item, id) |> Repo.preload([:assigned_user])
+  def load_item!(id), do: Repo.get!(Item, id) |> Repo.preload([:assigned_user, :documents])
   def get_item(id), do: Repo.get(Item, id)
 
   @doc """
@@ -63,7 +64,7 @@ defmodule Neurony.Todos do
   def create_item(user, attrs \\ %{}) do
     %Item{}
     |> Item.changeset(attrs)
-    |> Ecto.Changeset.put_assoc(:assigned_user, user)
+    |> put_assoc(:assigned_user, user)
     |> Repo.insert()
   end
 

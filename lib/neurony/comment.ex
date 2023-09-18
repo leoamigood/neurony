@@ -40,9 +40,9 @@ defmodule Neurony.Comment do
 
   def create(params, item, user, parent_id \\ nil) do
     changeset(%__MODULE__{}, params)
-    |> Ecto.Changeset.put_change(:parent_id, parent_id)
-    |> Ecto.Changeset.put_assoc(:item, item)
-    |> Ecto.Changeset.put_assoc(:user, user)
+    |> put_change(:parent_id, parent_id)
+    |> put_assoc(:item, item)
+    |> put_assoc(:user, user)
     |> Repo.insert()
   end
 

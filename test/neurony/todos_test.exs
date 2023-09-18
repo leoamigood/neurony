@@ -22,7 +22,7 @@ defmodule Neurony.TodosTest do
     end
 
     test "load_item!/1 returns the item with given id", %{user: user} do
-      item = item_fixture(user)
+      item = item_fixture(user) |> Todos.reload!()
       assert Todos.load_item!(item.id) == item
     end
 
@@ -63,7 +63,7 @@ defmodule Neurony.TodosTest do
     end
 
     test "update_item/2 with invalid data returns error changeset", %{user: user} do
-      item = item_fixture(user)
+      item = item_fixture(user) |> Todos.reload!()
       assert {:error, %Ecto.Changeset{}} = Todos.update_item(item, @invalid_attrs)
       assert item == Todos.load_item!(item.id)
     end

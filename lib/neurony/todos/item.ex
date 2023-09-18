@@ -2,12 +2,15 @@ defmodule Neurony.Todos.Item do
   @moduledoc false
 
   use Ecto.Schema
-  import Ecto.Changeset
 
   alias Neurony.Accounts.User
+  alias Neurony.Document
+
+  import Ecto.Changeset
 
   schema "items" do
     belongs_to :assigned_user, User
+    has_many :documents, Document, on_delete: :delete_all
 
     field :deadline, :date
     field :description, :string
@@ -18,8 +21,11 @@ defmodule Neurony.Todos.Item do
     timestamps()
   end
 
-  @doc false
-  def changeset(item, attrs) do
+  def add_documents(item, documents) do
+    Enum.each(documents, &Document.create(%{filename: &1}, item))
+  end
+
+  def changeset(item, attrs \\ %{}) do
     item
     |> cast(attrs, [:title, :description, :priority, :deadline, :completed, :assigned_user_id])
     |> validate_required([:title, :description, :priority, :deadline])

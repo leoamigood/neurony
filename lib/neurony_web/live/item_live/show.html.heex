@@ -14,7 +14,16 @@
   <:item title="Deadline"><%= @item.deadline %></:item>
 </.list>
 
-<hr />
+<.simple_form for={@form} id="upload_form" phx-change="validate" phx-submit="upload">
+  <%= if @total_documents < max_total_documents() do %>
+    Total <b><%= @total_documents %></b>
+    document(s). <.live_file_input upload={@uploads.documents} />
+    <.button type="submit">Upload</.button>
+  <% else %>
+    Maximum <b><%= @total_documents %></b> upload documents amount reached.
+  <% end %>
+</.simple_form>
+
 <br />
 
 <.live_component

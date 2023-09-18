@@ -23,7 +23,7 @@ defmodule NeuronyWeb.ItemLive.Show do
       item ->
         {:ok,
          socket
-         |> stream(:items, Todos.list_items())
+         |> stream(:items, Todos.list_items(%{}))
          |> assign_form(Item.changeset(item))}
     end
   end

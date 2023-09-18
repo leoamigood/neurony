@@ -27,9 +27,18 @@ defmodule Neurony.Todos do
       [%Item{}, ...]
 
   """
-  def list_items do
-    query = from i in Item, order_by: [asc: i.inserted_at], preload: [:assigned_user]
-    Repo.all(query)
+  def list_items(%{priority: priority}) when priority in ["low", "medium", "high"] do
+    items_query()
+    |> where([t], t.priority == ^priority)
+    |> Repo.all()
+  end
+
+  def list_items(_) do
+    Repo.all(items_query())
+  end
+
+  defp items_query do
+    from i in Item, order_by: [asc: i.inserted_at], preload: [:assigned_user]
   end
 
   @doc """

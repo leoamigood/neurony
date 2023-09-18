@@ -16,7 +16,7 @@ defmodule NeuronyWeb.ItemLive.Index do
 
     {:ok,
      socket
-     |> stream(:items, Todos.list_items())
+     |> stream(:items, Todos.list_items(socket.assigns))
      |> assign(:assignees, Todos.assignees())}
   end
 
@@ -54,6 +54,19 @@ defmodule NeuronyWeb.ItemLive.Index do
   end
 
   @impl true
+  def handle_info(
+        %{event: "saved", payload: %{item: item}},
+        %{assigns: %{priority: priority}} = socket
+      ) do
+    case to_string(item.priority) do
+      ^priority ->
+        {:noreply, stream_insert(socket, :items, item)}
+
+      _ ->
+        {:noreply, socket}
+    end
+  end
+
   def handle_info(%{event: "saved", payload: %{item: item}}, socket) do
     {:noreply, stream_insert(socket, :items, item)}
   end
@@ -71,6 +84,16 @@ defmodule NeuronyWeb.ItemLive.Index do
     broadcast_from!(self(), @todo_topic, "saved", %{item: item})
 
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("filter", %{"filter" => %{"select" => priority}}, socket) do
+    items = Todos.list_items(%{priority: priority})
+
+    {:noreply,
+     socket
+     |> assign(:priority, priority)
+     |> stream(:items, items, reset: true)}
   end
 
   @impl true

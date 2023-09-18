@@ -9,8 +9,11 @@ module.exports = {
   content: [
     "./js/**/*.js",
     "../lib/*_web.ex",
-    "../lib/*_web/**/*.*ex"
+    "../lib/*_web/**/*.*ex",
+    "../deps/phoenix_ui/**/*.*ex",
   ],
+  darkMode: "class",
+  plugins: [],
   theme: {
     extend: {
       colors: {
@@ -19,6 +22,9 @@ module.exports = {
     },
   },
   plugins: [
+    plugin(function({ addVariant }) {
+      addVariant('invalid', '&.invalid:not(.phx-no-feedback)')
+    }),
     require("@tailwindcss/forms"),
     // Allows prefixing tailwind classes with LiveView classes to add rules
     // only when LiveView classes are applied, for example:

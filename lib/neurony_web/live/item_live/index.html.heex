@@ -1,5 +1,12 @@
 <.header>
-  Listing Items
+  <.live_component
+    module={Phoenix.UI.Components.SelectFilter}
+    id="priority_filter"
+    prompt="Filter by priority"
+    options={["low", "medium", "high"]}
+    on_change="filter"
+  />
+
   <:actions>
     <.link patch={~p"/items/new"}>
       <.button>New Item</.button>

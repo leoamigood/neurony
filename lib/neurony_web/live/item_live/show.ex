@@ -15,27 +15,27 @@ defmodule NeuronyWeb.ItemLive.Show do
 
       _ ->
         {:ok,
-          socket
-          |> stream(:items, Todos.list_items())
-          |> assign(:assignees, Todos.assignees())}
+         socket
+         |> stream(:items, Todos.list_items())
+         |> assign(:assignees, Todos.assignees())}
     end
   end
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
     {:noreply,
-      socket
-      |> assign(:comments, Comment.item_comments(id))
-      |> assign(:page_title, page_title(socket.assigns.live_action))
-      |> assign(:item, Todos.load_item!(id))}
+     socket
+     |> assign(:comments, Comment.item_comments(id))
+     |> assign(:page_title, page_title(socket.assigns.live_action))
+     |> assign(:item, Todos.load_item!(id))}
   end
 
   @impl true
   def handle_info({NeuronyWeb.CommentLive.FormComponent, {:posted, comment}}, socket) do
     {:noreply,
-      socket
-      |> put_flash(:info, "Comment posted successfully")
-      |> push_patch(to: ~p"/items/#{comment.item_id}")}
+     socket
+     |> put_flash(:info, "Comment posted successfully")
+     |> push_patch(to: ~p"/items/#{comment.item_id}")}
   end
 
   @impl true

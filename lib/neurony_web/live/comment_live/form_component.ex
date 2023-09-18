@@ -19,9 +19,21 @@ defmodule NeuronyWeb.CommentLive.FormComponent do
         phx-submit="save"
         hidden={@hidden}
       >
-        <.input id={"comment-input-#{@id}"} field={@form[:body]} type="text" value={@comment_body} label="Leave a comment..." />
+        <.input
+          id={"comment-input-#{@id}"}
+          field={@form[:body]}
+          type="text"
+          value={@comment_body}
+          label="Leave a comment..."
+        />
         <:actions>
-          <.button phx-disable-with="Posting..." disabled={!@form.source.valid?} phx-click={toggle(@reply_to)}>Post Comment</.button>
+          <.button
+            phx-disable-with="Posting..."
+            disabled={!@form.source.valid?}
+            phx-click={toggle(@reply_to)}
+          >
+            Post Comment
+          </.button>
         </:actions>
       </.simple_form>
     </div>
@@ -29,6 +41,7 @@ defmodule NeuronyWeb.CommentLive.FormComponent do
   end
 
   defp toggle(comment) when is_nil(comment), do: nil
+
   defp toggle(comment) do
     JS.toggle(to: "#comment-form-#{comment.id}", in: "fade-in", out: "fade-out")
     |> JS.toggle(to: "#comment-reply-button-#{comment.id}", time: 0)
@@ -39,10 +52,10 @@ defmodule NeuronyWeb.CommentLive.FormComponent do
     changeset = Comment.changeset(%Comment{})
 
     {:ok,
-      socket
-      |> assign(assigns)
-      |> assign(:comment_body, nil)
-      |> assign_form(changeset)}
+     socket
+     |> assign(assigns)
+     |> assign(:comment_body, nil)
+     |> assign_form(changeset)}
   end
 
   @impl true
@@ -50,9 +63,9 @@ defmodule NeuronyWeb.CommentLive.FormComponent do
     changeset = Comment.changeset(%Comment{}, comment_params)
 
     {:noreply,
-      socket
-      |> assign_form(changeset)
-      |> assign(:comment_body, comment_params["body"])}
+     socket
+     |> assign_form(changeset)
+     |> assign(:comment_body, comment_params["body"])}
   end
 
   @impl true
@@ -64,11 +77,16 @@ defmodule NeuronyWeb.CommentLive.FormComponent do
     with {:ok, comment} <- Comments.post(socket.assigns, comment_params),
          comment <- Comment.load(comment, :parent) do
       notify_parent({:posted, comment})
-      send_update(CommentsComponent, id: "replies-#{comment.parent_id}", comments: Comment.replies(comment.parent))
 
-      {:noreply, socket
-                 |> assign_form(Comment.changeset(%Comment{}, %{comment_body: nil}))
-                 |> assign(:comment_body, nil)}
+      send_update(CommentsComponent,
+        id: "replies-#{comment.parent_id}",
+        comments: Comment.replies(comment.parent)
+      )
+
+      {:noreply,
+       socket
+       |> assign_form(Comment.changeset(%Comment{}, %{comment_body: nil}))
+       |> assign(:comment_body, nil)}
     else
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}

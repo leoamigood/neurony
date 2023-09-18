@@ -27,7 +27,12 @@ defmodule Neurony.TodosTest do
     end
 
     test "create_item/1 with valid data creates a item", %{user: user} do
-      valid_attrs = %{deadline: ~D[2023-09-13], description: "some description", priority: :low, title: "some title"}
+      valid_attrs = %{
+        deadline: ~D[2023-09-13],
+        description: "some description",
+        priority: :low,
+        title: "some title"
+      }
 
       assert {:ok, %Item{} = item} = Todos.create_item(user, valid_attrs)
       assert item.deadline == ~D[2023-09-13]
@@ -42,7 +47,13 @@ defmodule Neurony.TodosTest do
 
     test "update_item/2 with valid data updates the item", %{user: user} do
       item = item_fixture(user)
-      update_attrs = %{deadline: ~D[2023-09-14], description: "some updated description", priority: :medium, title: "some updated title"}
+
+      update_attrs = %{
+        deadline: ~D[2023-09-14],
+        description: "some updated description",
+        priority: :medium,
+        title: "some updated title"
+      }
 
       assert {:ok, %Item{} = item} = Todos.update_item(item, update_attrs)
       assert item.deadline == ~D[2023-09-14]

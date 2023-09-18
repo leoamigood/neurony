@@ -4,8 +4,19 @@ defmodule NeuronyWeb.ItemLiveTest do
   import Phoenix.LiveViewTest
   import Neurony.TodosFixtures
 
-  @create_attrs %{deadline: "2023-09-13", description: "some description", priority: :low, title: "some title", assigned_user_id: nil}
-  @update_attrs %{deadline: "2023-09-14", description: "some updated description", priority: :medium, title: "some updated title"}
+  @create_attrs %{
+    deadline: "2023-09-13",
+    description: "some description",
+    priority: :low,
+    title: "some title",
+    assigned_user_id: nil
+  }
+  @update_attrs %{
+    deadline: "2023-09-14",
+    description: "some updated description",
+    priority: :medium,
+    title: "some updated title"
+  }
   @invalid_attrs %{deadline: nil, description: nil, priority: nil, title: nil}
 
   defp create_item(%{user: user}) do

@@ -25,16 +25,17 @@ defmodule Neurony.Comment do
     |> where([t], t.item_id == ^id)
     |> order_by([t], desc: t.inserted_at)
     |> preload(:user)
-    |> Repo.all
+    |> Repo.all()
   end
 
   def replies(comment) when is_nil(comment), do: []
+
   def replies(comment) do
     comment
     |> children
     |> order_by([t], desc: t.inserted_at)
     |> preload(:user)
-    |> Repo.all
+    |> Repo.all()
   end
 
   def create(params, item, user, parent_id \\ nil) do

@@ -13,10 +13,11 @@ defmodule NeuronyWeb.ItemLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     if connected?(socket), do: NeuronyWeb.Endpoint.subscribe(@todo_topic)
+
     {:ok,
-      socket
-      |> stream(:items, Todos.list_items())
-      |> assign(:assignees, Todos.assignees())}
+     socket
+     |> stream(:items, Todos.list_items())
+     |> assign(:assignees, Todos.assignees())}
   end
 
   @impl true

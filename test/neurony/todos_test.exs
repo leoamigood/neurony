@@ -18,7 +18,7 @@ defmodule Neurony.TodosTest do
 
     test "list_items/0 returns all items", %{user: user} do
       item = item_fixture(user)
-      assert Todos.list_items() == [item]
+      assert Todos.list_items(nil) == [item]
     end
 
     test "load_item!/1 returns the item with given id", %{user: user} do

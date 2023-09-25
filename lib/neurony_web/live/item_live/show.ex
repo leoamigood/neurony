@@ -68,12 +68,13 @@ defmodule NeuronyWeb.ItemLive.Show do
   @impl Phoenix.LiveView
   def handle_event("upload", _params, %{assigns: %{item: item}} = socket) do
     File.mkdir_p!(@uploads_dir)
+
     case uploaded_entries(socket, :documents) do
       {[_ | _] = entries, []} ->
         uploaded_files =
           for entry <- entries do
             consume_uploaded_entry(socket, entry, fn %{path: path} ->
-              dest = Path.join(@uploads_dir, Path.basename(path)) |> IO.inspect
+              dest = Path.join(@uploads_dir, Path.basename(path))
               File.cp!(path, dest)
               {:ok, VerifiedRoutes.static_path(socket, "/uploads/#{Path.basename(dest)}")}
             end)
